@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!-- Dummy D-Bus API description -->
+<node>
+	<!-- -->
+	<interface name="my.dum.Dummy1">
+		<!-- This method lorem ipsum dolor sit amet, consetetur sadipscing elitr, 
+		     sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+		     sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. -->
+		<method name="Foo" />
+		<!-- The bar property. -->
+		<property name="Bar" type="s" access="read" />
+		<annotation name="de.serviceflow.codegenj.CollectorAPI" value="de.serviceflow.codegenj.ObjectManager#getDummies" />
+	</interface>
+</node>

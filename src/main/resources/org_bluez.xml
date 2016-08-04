@@ -1,0 +1,441 @@
+<?xml version="1.0"?>
+<!-- BlueZ D-Bus API description -->
+<node>
+	<!-- -->
+	<interface name="org.bluez.Adapter1">
+		<!-- This method starts the device discovery session. This includes an 
+			inquiry procedure and remote device name resolving. Use StopDiscovery to 
+			release the sessions acquired. This process will start creating Device objects 
+			as new devices are discovered. During discovery RSSI delta-threshold is imposed. 
+			Possible errors: org.bluez.Error.NotReady org.bluez.Error.Failed -->
+		<method name="StartDiscovery" />
+		<!-- This method will cancel any previous StartDiscovery transaction. Note 
+			that a discovery procedure is shared between all discovery sessions thus 
+			calling StopDiscovery will only release a single session. Possible errors: 
+			org.bluez.Error.NotReady org.bluez.Error.Failed org.bluez.Error.NotAuthorized -->
+		<method name="StopDiscovery" />
+		<!-- This removes the remote device object at the given path. It will remove 
+			also the pairing information. Possible errors: org.bluez.Error.InvalidArguments 
+			org.bluez.Error.Failed -->
+		<method name="RemoveDevice">
+			<arg name="device" type="o" direction="in" />
+		</method>
+		<!-- This method sets the device discovery filter for the caller. When 
+			this method is called with no filter parameter, filter is removed. Parameters 
+			that may be set in the filter dictionary include the following: array{string} 
+			UUIDs : filtered service UUIDs int16 RSSI : RSSI threshold value uint16 Pathloss 
+			: Pathloss threshold value string Transport : type of scan to run When a 
+			remote device is found that advertises any UUID from UUIDs, it will be reported 
+			if: - Pathloss and RSSI are both empty, - only Pathloss param is set, device 
+			advertise TX pwer, and computed pathloss is less than Pathloss param, - only 
+			RSSI param is set, and received RSSI is higher than RSSI param, Transport 
+			parameter determines the type of scan: "auto" - interleaved scan, default 
+			value "bredr" - BR/EDR inquiry "le" - LE scan only If "le" or "bredr" Transport 
+			is requested, and the controller doesn't support it, org.bluez.Error.Failed 
+			error will be returned. If "auto" transport is requested, scan will use LE, 
+			BREDR, or both, depending on what's currently enabled on the controller. 
+			When discovery filter is set, Device objects will be created as new devices 
+			with matching criteria are discovered regardless of they are connectable 
+			or discoverable which enables listening to non-connectable and non-discoverable 
+			devices. PropertiesChanged signals will be emitted for already existing Device 
+			objects, with updated RSSI value. If one or more discovery filters have been 
+			set, the RSSI delta-threshold, that is imposed by StartDiscovery by default, 
+			will not be applied. When multiple clients call SetDiscoveryFilter, their 
+			filters are internally merged, and notifications about new devices are sent 
+			to all clients. Therefore, each client must check that device updates actually 
+			match its filter. When SetDiscoveryFilter is called multiple times by the 
+			same client, last filter passed will be active for given client. SetDiscoveryFilter 
+			can be called before StartDiscovery. It is useful when client will create 
+			first discovery session, to ensure that proper scan will be started right 
+			after call to StartDiscovery. Possible errors: org.bluez.Error.NotReady org.bluez.Error.NotSupported 
+			org.bluez.Error.Failed -->
+		<method name="SetDiscoveryFilter">
+			<arg name="filter" type="e{}" direction="in" />
+		</method>
+		<!-- The Bluetooth device address. -->
+		<property name="Address" type="s" access="read" />
+		<!-- The Bluetooth system name (pretty hostname). This property is either 
+			a static system default or controlled by an external daemon providing access 
+			to the pretty hostname configuration. -->
+		<property name="Name" type="s" access="read" />
+		<!-- The Bluetooth friendly name. This value can be changed. In case no 
+			alias is set, it will return the system provided name. Setting an empty string 
+			as alias will convert it back to the system provided name. When resetting 
+			the alias with an empty string, the property will default back to system 
+			name. On a well configured system, this property never needs to be changed 
+			since it defaults to the system name and provides the pretty hostname. Only 
+			if the local name needs to be different from the pretty hostname, this property 
+			should be used as last resort. -->
+		<property name="Alias" type="s" access="readwrite" />
+		<!-- The Bluetooth class of device. This property represents the value 
+			that is either automatically configured by DMI/ACPI information or provided 
+			as static configuration. -->
+		<property name="Class" type="u" access="read" />
+		<!-- Switch an adapter on or off. This will also set the appropriate connectable 
+			state of the controller. The value of this property is not persistent. After 
+			restart or unplugging of the adapter it will reset back to false. -->
+		<property name="Powered" type="b" access="readwrite" />
+		<!-- Switch an adapter to discoverable or non-discoverable to either make 
+			it visible or hide it. This is a global setting and should only be used by 
+			the settings application. If the DiscoverableTimeout is set to a non-zero 
+			value then the system will set this value back to false after the timer expired. 
+			In case the adapter is switched off, setting this value will fail. When changing 
+			the Powered property the new state of this property will be updated via a 
+			PropertiesChanged signal. For any new adapter this settings defaults to false. -->
+		<property name="Discoverable" type="b" access="readwrite" />
+		<!-- Switch an adapter to pairable or non-pairable. This is a global setting 
+			and should only be used by the settings application. Note that this property 
+			only affects incoming pairing requests. For any new adapter this settings 
+			defaults to true. -->
+		<property name="Pairable" type="b" access="readwrite" />
+		<!-- The pairable timeout in seconds. A value of zero means that the timeout 
+			is disabled and it will stay in pairable mode forever. The default value 
+			for pairable timeout should be disabled (value 0). -->
+		<property name="PairableTimeout" type="u" access="readwrite" />
+		<!-- The discoverable timeout in seconds. A value of zero means that the 
+			timeout is disabled and it will stay in discoverable/limited mode forever. 
+			The default value for the discoverable timeout should be 180 seconds (3 minutes). -->
+		<property name="DiscoverableTimeout" type="u" access="readwrite" />
+		<!-- Indicates that a device discovery procedure is active. -->
+		<property name="Discovering" type="b" access="read" />
+		<!-- List of 128-bit UUIDs that represents the available local services. -->
+		<property name="UUIDs" type="as" access="read" />
+		<!-- Local Device ID information in modalias format used by the kernel 
+			and udev. -->
+		<property name="Modalias" type="s" access="read" />
+		<annotation name="olir.codegenj.CollectorAPI" value="olir.codegenj.ObjectManager#getAdapters" />
+	</interface>
+	<!-- -->
+	<interface name="org.bluez.Device1">
+		<!-- This is a generic method to connect any profiles the remote device 
+			supports that can be connected to and have been flagged as auto-connectable 
+			on our side. If only subset of profiles is already connected it will try 
+			to connect currently disconnected ones. If at least one profile was connected 
+			successfully this method will indicate success. Possible errors: org.bluez.Error.NotReady 
+			org.bluez.Error.Failed org.bluez.Error.InProgress org.bluez.Error.AlreadyConnected -->
+		<method name="Connect" />
+		<!-- This method gracefully disconnects all connected profiles and then 
+			terminates low-level ACL connection. ACL connection will be terminated even 
+			if some profiles were not disconnected properly e.g. due to misbehaving device. 
+			This method can be also used to cancel a preceding Connect call before a 
+			reply to it has been received. Possible errors: org.bluez.Error.NotConnected -->
+		<method name="Disconnect" />
+		<!-- This method connects a specific profile of this device. The UUID provided 
+			is the remote service UUID for the profile. Possible errors: org.bluez.Error.Failed 
+			org.bluez.Error.InProgress org.bluez.Error.InvalidArguments org.bluez.Error.NotAvailable 
+			org.bluez.Error.NotReady -->
+		<method name="ConnectProfile">
+			<arg name="UUID" type="s" direction="in" />
+		</method>
+		<!-- This method disconnects a specific profile of this device. The profile 
+			needs to be registered client profile. There is no connection tracking for 
+			a profile, so as long as the profile is registered this will always succeed. 
+			Possible errors: org.bluez.Error.Failed org.bluez.Error.InProgress org.bluez.Error.InvalidArguments 
+			org.bluez.Error.NotSupported -->
+		<method name="DisconnectProfile">
+			<arg name="UUID" type="s" direction="in" />
+		</method>
+		<!-- This method will connect to the remote device, initiate pairing and 
+			then retrieve all SDP records (or GATT primary services). If the application 
+			has registered its own agent, then that specific agent will be used. Otherwise 
+			it will use the default agent. Only for applications like a pairing wizard 
+			it would make sense to have its own agent. In almost all other cases the 
+			default agent will handle this just fine. In case there is no application 
+			agent and also no default agent present, this method will fail. Possible 
+			errors: org.bluez.Error.InvalidArguments org.bluez.Error.Failed org.bluez.Error.AlreadyExists 
+			org.bluez.Error.AuthenticationCanceled org.bluez.Error.AuthenticationFailed 
+			org.bluez.Error.AuthenticationRejected org.bluez.Error.AuthenticationTimeout 
+			org.bluez.Error.ConnectionAttemptFailed -->
+		<method name="Pair" />
+		<!-- This method can be used to cancel a pairing operation initiated by 
+			the Pair method. Possible errors: org.bluez.Error.DoesNotExist org.bluez.Error.Failed -->
+		<method name="CancelPairing" />
+		<!-- The Bluetooth device address of the remote device. -->
+		<property name="Address" type="s" access="read" />
+		<!-- The Bluetooth remote name. This value can not be changed. Use the 
+			Alias property instead. This value is only present for completeness. It is 
+			better to always use the Alias property when displaying the devices name. 
+			If the Alias property is unset, it will reflect this value which makes it 
+			more convenient. -->
+		<property name="Name" type="s" access="read" />
+		<!-- Proposed icon name according to the freedesktop.org icon naming specification. -->
+		<property name="Icon" type="s" access="read" />
+		<!-- The Bluetooth class of device of the remote device. -->
+		<property name="Class" type="u" access="read" />
+		<!-- External appearance of device, as found on GAP service. -->
+		<property name="Appearance" type="q" access="read" />
+		<!-- List of 128-bit UUIDs that represents the available remote services. -->
+		<property name="UUIDs" type="as" access="read" />
+		<!-- Indicates if the remote device is paired. -->
+		<property name="Paired" type="b" access="read" />
+		<!-- Indicates if the remote device is currently connected. A PropertiesChanged 
+			signal indicate changes to this status. -->
+		<property name="Connected" type="b" access="read" />
+		<!-- Indicates if the remote is seen as trusted. This setting can be changed 
+			by the application. -->
+		<property name="Trusted" type="b" access="readwrite" />
+		<!-- If set to true any incoming connections from the device will be immediately 
+			rejected. Any device drivers will also be removed and no new ones will be 
+			probed as long as the device is blocked. -->
+		<property name="Blocked" type="b" access="readwrite" />
+		<!-- The name alias for the remote device. The alias can be used to have 
+			a different friendly name for the remote device. In case no alias is set, 
+			it will return the remote device name. Setting an empty string as alias will 
+			convert it back to the remote device name. When resetting the alias with 
+			an empty string, the property will default back to the remote name. -->
+		<property name="Alias" type="s" access="readwrite" />
+		<!-- The adapter the device belongs to. -->
+		<property name="Adapter" type="o" access="read">
+			<annotation name="olir.codegenj.ParentAPI" value="org.bluez.Adapter1" />
+		</property>
+		<!-- Set to true if the device only supports the pre-2.1 pairing mechanism. 
+			This property is useful during device discovery to anticipate whether legacy 
+			or simple pairing will occur if pairing is initiated. Note that this property 
+			can exhibit false-positives in the case of Bluetooth 2.1 (or newer) devices 
+			that have disabled Extended Inquiry Response support. -->
+		<property name="LegacyPairing" type="b" access="read" />
+		<!-- Remote Device ID information in modalias format used by the kernel 
+			and udev. -->
+		<property name="Modalias" type="s" access="read" />
+		<!-- Received Signal Strength Indicator of the remote device (inquiry or 
+			advertising). -->
+		<property name="RSSI" type="n" access="read" />
+		<!-- Advertised transmitted power level (inquiry or advertising). -->
+		<!-- <property name="TxPower" type="q" access="read" /> -->
+		<!-- Manufacturer specific advertisement data. Keys are 16 bits Manufacturer 
+			ID followed by its byte array value. -->
+		<!-- <property name="ManufacturerData" type="a{qv}" access="read" /> -->
+		<!-- Service advertisement data. Keys are the UUIDs in string format followed 
+			by its byte array value. -->
+		<!-- <property name="ServiceData" type="e{}" access="read" /> -->
+		<!-- Indicate whether or not service discovery has been resolved. -->
+		<property name="ServicesResolved" type="b" access="read" />
+		<annotation name="olir.codegenj.CollectorAPI" value="org.bluez.Adapter1#getDevices" />
+	</interface>
+	<!-- -->
+	<interface name="org.bluez.GattService1">
+		<!-- 128-bit service UUID. -->
+		<property name="UUID" type="s" access="read" />
+		<!-- The Bluetooth device the service belongs to. Only present on services 
+			from remote devices. -->
+		<property name="Device" type="o" access="read">
+			<annotation name="olir.codegenj.ParentAPI" value="org.bluez.Device1" />
+		</property>
+		<!-- Indicates whether or not this GATT service is a primary service. If 
+			false, the service is secondary. -->
+		<property name="Primary" type="b" access="read" />
+		<!--
+		<property name="Characteristics" type="ao" access="read">
+			<annotation name="olir.codegenj.CollectorAPI" value="org.bluez.GattCharacteristic1" />
+		</property>
+		-->
+		<annotation name="olir.codegenj.CollectorAPI" value="org.bluez.Device1#*getServices" />
+	</interface>
+	<!-- -->
+	<interface name="org.bluez.GattCharacteristic1">
+		<!-- Issues a request to read the value of the characteristic and returns 
+			the value if the operation was successful. Possible options: "offset": uint16 
+			offset "device": Object Device (Server only) Possible Errors: org.bluez.Error.Failed 
+			org.bluez.Error.InProgress org.bluez.Error.NotPermitted org.bluez.Error.NotAuthorized 
+			org.bluez.Error.NotSupported -->
+		<method name="ReadValue">
+			<arg name="value" type="ay" direction="out" />
+		</method>
+		<!-- Issues a request to write the value of the characteristic. Possible 
+			options: "offset": Start offset "device": Device path (Server only) Possible 
+			Errors: org.bluez.Error.Failed org.bluez.Error.InProgress org.bluez.Error.NotPermitted 
+			org.bluez.Error.InvalidValueLength org.bluez.Error.NotAuthorized org.bluez.Error.NotSupported -->
+		<method name="WriteValue">
+			<arg name="value" type="ay" direction="in" />
+		</method>
+		<!-- Starts a notification session from this characteristic if it supports 
+			value notifications or indications. Possible Errors: org.bluez.Error.Failed 
+			org.bluez.Error.InProgress org.bluez.Error.NotSupported -->
+		<method name="StartNotify" />
+		<!-- This method will cancel any previous StartNotify transaction. Note 
+			that notifications from a characteristic are shared between sessions thus 
+			calling StopNotify will release a single session. -->
+		<method name="StopNotify" />
+		<!-- 128-bit characteristic UUID. -->
+		<property name="UUID" type="s" access="read" />
+		<!-- The GATT service the characteristic belongs to. -->
+		<property name="Service" type="o" access="read">
+			<annotation name="olir.codegenj.ParentAPI" value="org.bluez.GattService1" />
+		</property>
+		<!-- The cached value of the characteristic. This property gets updated 
+			only after a successful read request and when a notification or indication 
+			is received, upon which a PropertiesChanged signal will be emitted. -->
+		<property name="Value" type="ay" access="read" />
+		<!-- True, if notifications or indications on this characteristic are currently 
+			enabled. -->
+		<property name="Notifying" type="b" access="read" />
+		<!-- Defines how the characteristic value can be used. See Core spec "Table 
+			3.5: Characteristic Properties bit field", and "Table 3.8: Characteristic 
+			Extended Properties bit field". Allowed values: "broadcast" "read" "write-without-response" 
+			"write" "notify" "indicate" "authenticated-signed-writes" "reliable-write" 
+			"writable-auxiliaries" "encrypt-read" "encrypt-write" "encrypt-authenticated-read" 
+			"encrypt-authenticated-write" "secure-read" (Server only) "secure-write" 
+			(Server only) -->
+		<property name="Flags" type="as" access="read" />
+		<!-- 
+		<property name="Descriptors" type="ao" access="read">
+			<annotation name="olir.codegenj.CollectorAPI" value="org.bluez.GattDescriptor1" />
+		</property>
+		-->
+	</interface>
+	<!-- -->
+	<interface name="org.bluez.GattDescriptor1">
+		<!-- Issues a request to read the value of the characteristic and returns 
+			the value if the operation was successful. Possible options: "offset": Start 
+			offset "device": Device path (Server only) Possible Errors: org.bluez.Error.Failed 
+			org.bluez.Error.InProgress org.bluez.Error.NotPermitted org.bluez.Error.NotAuthorized 
+			org.bluez.Error.NotSupported -->
+		<method name="ReadValue">
+			<arg name="value" type="ay" direction="out" />
+		</method>
+		<!-- Issues a request to write the value of the characteristic. Possible 
+			options: "offset": Start offset "device": Device path (Server only) Possible 
+			Errors: org.bluez.Error.Failed org.bluez.Error.InProgress org.bluez.Error.NotPermitted 
+			org.bluez.Error.InvalidValueLength org.bluez.Error.NotAuthorized org.bluez.Error.NotSupported -->
+		<method name="WriteValue">
+			<arg name="value" type="ay" direction="in" />
+		</method>
+		<!-- 128-bit descriptor UUID. -->
+		<property name="UUID" type="s" access="read" />
+		<!-- -->
+		<property name="Characteristic" type="o" access="read">
+			<annotation name="olir.codegenj.ParentAPI" value="org.bluez.GattCharacteristic1" />
+		</property>
+		<!-- The cached value of the descriptor. This property gets updated only 
+			after a successful read request, upon which a PropertiesChanged signal will 
+			be emitted. -->
+		<property name="Value" type="ay" access="read" />
+		<!-- Defines how the descriptor value can be used. Possible values: "read" 
+			"write" "encrypt-read" "encrypt-write" "encrypt-authenticated-read" "encrypt-authenticated-write" 
+			"secure-read" (Server Only) "secure-write" (Server Only) -->
+		<property name="Flags" type="as" access="read" />
+	</interface>
+	<!-- -->
+	<interface name="org.bluez.AgentManager1">
+		<!-- This registers an agent handler. The object path defines the path 
+			of the agent that will be called when user input is needed. Every application 
+			can register its own agent and for all actions triggered by that application 
+			its agent is used. It is not required by an application to register an agent. 
+			If an application does chooses to not register an agent, the default agent 
+			is used. This is on most cases a good idea. Only application like a pairing 
+			wizard should register their own agent. An application can only register 
+			one agent. Multiple agents per application is not supported. The capability 
+			parameter can have the values "DisplayOnly", "DisplayYesNo", "KeyboardOnly", 
+			"NoInputNoOutput" and "KeyboardDisplay" which reflects the input and output 
+			capabilities of the agent. If an empty string is used it will fallback to 
+			"KeyboardDisplay".
+			
+			if (g_str_equal(capability, ""))
+927		return IO_CAPABILITY_KEYBOARDDISPLAY;
+928	if (g_str_equal(capability, "DisplayOnly"))
+929		return IO_CAPABILITY_DISPLAYONLY;
+930	if (g_str_equal(capability, "DisplayYesNo"))
+931		return IO_CAPABILITY_DISPLAYYESNO;
+932	if (g_str_equal(capability, "KeyboardOnly"))
+933		return IO_CAPABILITY_KEYBOARDONLY;
+934	if (g_str_equal(capability, "NoInputNoOutput"))
+935		return IO_CAPABILITY_NOINPUTNOOUTPUT;
+936	if (g_str_equal(capability, "KeyboardDisplay"))
+937		return IO_CAPABILITY_KEYBOARDDISPLAY;
+938	return IO_CAPABILITY_INVALID;
+			
+			 Possible errors: org.bluez.Error.InvalidArguments org.bluez.Error.AlreadyExists -->
+		<method name="RegisterAgent">
+			<arg name="agent" type="o" direction="in" />
+			<arg name="capability" type="s" direction="in" />
+		</method>
+		<!-- This unregisters the agent that has been previously registered. The 
+			object path parameter must match the same value that has been used on registration. 
+			Possible errors: org.bluez.Error.DoesNotExist -->
+		<method name="UnregisterAgent">
+			<arg name="agent" type="o" direction="in" />
+		</method>
+		<!-- This requests is to make the application agent the default agent. 
+			The application is required to register an agent. Special permission might 
+			be required to become the default agent. Possible errors: org.bluez.Error.DoesNotExist -->
+		<method name="RequestDefaultAgent">
+			<arg name="agent" type="o" direction="in" />
+		</method>
+		<annotation name="olir.codegenj.CollectorAPI"
+			value="olir.codegenj.ObjectManager#getAgentManagers" />
+	</interface>
+	<!-- -->
+	<interface name="org.bluez.Agent1">
+		<!-- This method gets called when the service daemon unregisters the agent. 
+			An agent can use it to do cleanup tasks. There is no need to unregister the 
+			agent, because when this method gets called it has already been unregistered. -->
+		<method name="Release"/>
+		<!-- This method gets called when the service daemon needs to get the passkey 
+			for an authentication. The return value should be a string of 1-16 characters 
+			length. The string can be alphanumeric. Possible errors: org.bluez.Error.Rejected 
+			org.bluez.Error.Canceled -->
+		<method name="RequestPinCode">
+			<arg name="device" type="o" direction="in" />
+			<arg name="pincode" type="s" direction="out" />
+		</method>
+		<!-- This method gets called when the service daemon needs to display a 
+			pincode for an authentication. An empty reply should be returned. When the 
+			pincode needs no longer to be displayed, the Cancel method of the agent will 
+			be called. This is used during the pairing process of keyboards that don't 
+			support Bluetooth 2.1 Secure Simple Pairing, in contrast to DisplayPasskey 
+			which is used for those that do. This method will only ever be called once 
+			since older keyboards do not support typing notification. Note that the PIN 
+			will always be a 6-digit number, zero-padded to 6 digits. This is for harmony 
+			with the later specification. Possible errors: org.bluez.Error.Rejected org.bluez.Error.Canceled -->
+		<method name="DisplayPinCode">
+			<arg name="device" type="o" direction="in" />
+			<arg name="pincode" type="s" direction="in" />
+		</method>
+		<!-- This method gets called when the service daemon needs to get the passkey 
+			for an authentication. The return value should be a numeric value between 
+			0-999999. Possible errors: org.bluez.Error.Rejected org.bluez.Error.Canceled -->
+		<method name="RequestPasskey">
+			<arg name="device" type="o" direction="in" />
+			<arg name="passkey" type="u" direction="out" />
+		</method>
+		<!-- This method gets called when the service daemon needs to display a 
+			passkey for an authentication. The entered parameter indicates the number 
+			of already typed keys on the remote side. An empty reply should be returned. 
+			When the passkey needs no longer to be displayed, the Cancel method of the 
+			agent will be called. During the pairing process this method might be called 
+			multiple times to update the entered value. Note that the passkey will always 
+			be a 6-digit number, so the display should be zero-padded at the start if 
+			the value contains less than 6 digits. -->
+		<method name="DisplayPasskey">
+			<arg name="device" type="o" direction="in" />
+			<arg name="passkey" type="u" direction="in" />
+			<arg name="entered" type="q" direction="in" />
+		</method>
+		<!-- This method gets called when the service daemon needs to confirm a 
+			passkey for an authentication. To confirm the value it should return an empty 
+			reply or an error in case the passkey is invalid. Note that the passkey will 
+			always be a 6-digit number, so the display should be zero-padded at the start 
+			if the value contains less than 6 digits. Possible errors: org.bluez.Error.Rejected 
+			org.bluez.Error.Canceled -->
+		<method name="RequestConfirmation">
+			<arg name="device" type="o" direction="in" />
+			<arg name="passkey" type="u" direction="in" />
+		</method>
+		<!-- This method gets called to request the user to authorize an incoming 
+			pairing attempt which would in other circumstances trigger the just-works 
+			model. Possible errors: org.bluez.Error.Rejected org.bluez.Error.Canceled -->
+		<method name="RequestAuthorization">
+			<arg name="device" type="o" direction="in" />
+		</method>
+		<!-- This method gets called when the service daemon needs to authorize 
+			a connection/service request. Possible errors: org.bluez.Error.Rejected org.bluez.Error.Canceled -->
+		<method name="AuthorizeService">
+			<arg name="device" type="o" direction="in" />
+			<arg name="uuid" type="s" direction="in" />
+		</method>
+		<!-- This method gets called to indicate that the agent request failed 
+			before a reply was returned. -->
+		<method name="Cancel"/>
+		<annotation name="olir.codegenj.SkeletonAPI" value="" />
+	</interface>
+</node>

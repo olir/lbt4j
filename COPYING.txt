@@ -1,0 +1,6 @@
+
+The license for the documentation of the BlueZ API
+is contained in LICENSE-LGPL-2.1.txt
+
+The generated sources and binaries are in the public domain:
+LICENSE-unlicense

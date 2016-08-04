@@ -1,0 +1,8 @@
+# Travis settings for
+# https://api.travis-ci.org/olir/codegenj.svg
+language: java
+notifications:
+  email: false
+after_success:
+  - mvn clean test jacoco:report saga:coverage coveralls:report
+# REMOVED cobertura:cobertura

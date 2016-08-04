@@ -26,6 +26,11 @@ Open the project documentation in your web browser on http://localhost:9000
 or open it without site:run under
 
 > target/site/index.html
+
+You can compile the jni library from the target (jni/ and classes/):
+
+> cd target/jni
+> make clean all
  
 ## HOWTO
 

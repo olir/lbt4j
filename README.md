@@ -30,6 +30,7 @@ or open it without site:run under
 You can compile the jni library from the target (jni/ and classes/):
 
 > cd target/jni
+
 > make clean all
  
 ## HOWTO

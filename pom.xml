@@ -240,6 +240,30 @@ Everyone is permitted to copy and distribute verbatim copies of this license doc
 					 <systemPath>${java.home}/../lib/tools.jar</systemPath>
 				   </dependency>
 				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.0.2</version>
+				<executions>
+				  <execution>
+					<phase>package</phase>
+					<goals>
+					  <goal>jar</goal>
+					</goals>
+					<configuration>
+					  <classesDirectory>${basedir}/target</classesDirectory>
+					  <classifier>native</classifier>
+					  <includes>
+						<include>classes/**/*.class</include>
+						<include>classes/**/*.xml</include>
+						<include>jni/**/*.c</include>
+						<include>jni/**/*.h</include>
+						<include>jni/**/Makefile</include>
+					  </includes>
+					</configuration>
+				  </execution>
+				</executions>
 			</plugin>			
 			<!-- test -->
 			<!-- pre-test -->

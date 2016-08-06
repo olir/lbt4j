@@ -2,20 +2,21 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<properties>
+		<codegenj.version>1.3.7</lbt4j.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+	
 	<!-- Maven Coordinates -->
 	<groupId>de.serviceflow</groupId>
 	<artifactId>lbt4j</artifactId>
-	<version>0.2.6</version>
+	<version>0.2.7</version>
 	<packaging>jar</packaging>
 
 	<prerequisites>
 		<maven>3.2.5</maven>
 	</prerequisites>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-	</properties>
 
 	<scm>
 		<connection>scm:git:https://github.com/olir/lbt4j.git</connection>
@@ -93,7 +94,7 @@ Everyone is permitted to copy and distribute verbatim copies of this license doc
 		<dependency>
 			<groupId>de.serviceflow</groupId>
 			<artifactId>codegenj</artifactId>
-			<version>1.3.6</version>
+			<version>${codegenj.version}</version>
 		</dependency>	
 		<dependency>
 			<groupId>junit</groupId>

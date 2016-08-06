@@ -35,8 +35,5 @@ You can compile the jni library from the target (jni/ and classes/):
  
 ## HOWTO
 
-TODO: [Instructions](src/site/markdown/instructions.md).
- 
-## Notice
-
-TODO: [Notice](Notice.html) and "Dependencies" in site docs.
+This projects build the jar. It is to be used with the The native library build in
+ [lbt4j-lib] (https://github.com/olir/lbt4j-lib).

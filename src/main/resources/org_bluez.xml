@@ -103,7 +103,7 @@
 		<!-- Local Device ID information in modalias format used by the kernel 
 			and udev. -->
 		<property name="Modalias" type="s" access="read" />
-		<annotation name="olir.codegenj.CollectorAPI" value="olir.codegenj.ObjectManager#getAdapters" />
+		<annotation name="de.serviceflow.codegenj.CollectorAPI" value="de.serviceflow.codegenj.ObjectManager#getAdapters" />
 	</interface>
 	<!-- -->
 	<interface name="org.bluez.Device1">
@@ -186,7 +186,7 @@
 		<property name="Alias" type="s" access="readwrite" />
 		<!-- The adapter the device belongs to. -->
 		<property name="Adapter" type="o" access="read">
-			<annotation name="olir.codegenj.ParentAPI" value="org.bluez.Adapter1" />
+			<annotation name="de.serviceflow.codegenj.ParentAPI" value="org.bluez.Adapter1" />
 		</property>
 		<!-- Set to true if the device only supports the pre-2.1 pairing mechanism. 
 			This property is useful during device discovery to anticipate whether legacy 
@@ -210,7 +210,7 @@
 		<!-- <property name="ServiceData" type="e{}" access="read" /> -->
 		<!-- Indicate whether or not service discovery has been resolved. -->
 		<property name="ServicesResolved" type="b" access="read" />
-		<annotation name="olir.codegenj.CollectorAPI" value="org.bluez.Adapter1#getDevices" />
+		<annotation name="de.serviceflow.codegenj.CollectorAPI" value="org.bluez.Adapter1#getDevices" />
 	</interface>
 	<!-- -->
 	<interface name="org.bluez.GattService1">
@@ -219,17 +219,17 @@
 		<!-- The Bluetooth device the service belongs to. Only present on services 
 			from remote devices. -->
 		<property name="Device" type="o" access="read">
-			<annotation name="olir.codegenj.ParentAPI" value="org.bluez.Device1" />
+			<annotation name="de.serviceflow.codegenj.ParentAPI" value="org.bluez.Device1" />
 		</property>
 		<!-- Indicates whether or not this GATT service is a primary service. If 
 			false, the service is secondary. -->
 		<property name="Primary" type="b" access="read" />
 		<!--
 		<property name="Characteristics" type="ao" access="read">
-			<annotation name="olir.codegenj.CollectorAPI" value="org.bluez.GattCharacteristic1" />
+			<annotation name="de.serviceflow.codegenj.CollectorAPI" value="org.bluez.GattCharacteristic1" />
 		</property>
 		-->
-		<annotation name="olir.codegenj.CollectorAPI" value="org.bluez.Device1#*getServices" />
+		<annotation name="de.serviceflow.codegenj.CollectorAPI" value="org.bluez.Device1#*getServices" />
 	</interface>
 	<!-- -->
 	<interface name="org.bluez.GattCharacteristic1">
@@ -260,7 +260,7 @@
 		<property name="UUID" type="s" access="read" />
 		<!-- The GATT service the characteristic belongs to. -->
 		<property name="Service" type="o" access="read">
-			<annotation name="olir.codegenj.ParentAPI" value="org.bluez.GattService1" />
+			<annotation name="de.serviceflow.codegenj.ParentAPI" value="org.bluez.GattService1" />
 		</property>
 		<!-- The cached value of the characteristic. This property gets updated 
 			only after a successful read request and when a notification or indication 
@@ -279,7 +279,7 @@
 		<property name="Flags" type="as" access="read" />
 		<!-- 
 		<property name="Descriptors" type="ao" access="read">
-			<annotation name="olir.codegenj.CollectorAPI" value="org.bluez.GattDescriptor1" />
+			<annotation name="de.serviceflow.codegenj.CollectorAPI" value="org.bluez.GattDescriptor1" />
 		</property>
 		-->
 	</interface>
@@ -304,7 +304,7 @@
 		<property name="UUID" type="s" access="read" />
 		<!-- -->
 		<property name="Characteristic" type="o" access="read">
-			<annotation name="olir.codegenj.ParentAPI" value="org.bluez.GattCharacteristic1" />
+			<annotation name="de.serviceflow.codegenj.ParentAPI" value="org.bluez.GattCharacteristic1" />
 		</property>
 		<!-- The cached value of the descriptor. This property gets updated only 
 			after a successful read request, upon which a PropertiesChanged signal will 
@@ -361,8 +361,8 @@
 		<method name="RequestDefaultAgent">
 			<arg name="agent" type="o" direction="in" />
 		</method>
-		<annotation name="olir.codegenj.CollectorAPI"
-			value="olir.codegenj.ObjectManager#getAgentManagers" />
+		<annotation name="de.serviceflow.codegenj.CollectorAPI"
+			value="de.serviceflow.codegenj.ObjectManager#getAgentManagers" />
 	</interface>
 	<!-- -->
 	<interface name="org.bluez.Agent1">
@@ -436,6 +436,6 @@
 		<!-- This method gets called to indicate that the agent request failed 
 			before a reply was returned. -->
 		<method name="Cancel"/>
-		<annotation name="olir.codegenj.SkeletonAPI" value="" />
+		<annotation name="de.serviceflow.codegenj.SkeletonAPI" value="" />
 	</interface>
 </node>

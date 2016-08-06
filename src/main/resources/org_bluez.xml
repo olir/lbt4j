@@ -224,11 +224,9 @@
 		<!-- Indicates whether or not this GATT service is a primary service. If 
 			false, the service is secondary. -->
 		<property name="Primary" type="b" access="read" />
-		<!--
 		<property name="Characteristics" type="ao" access="read">
 			<annotation name="de.serviceflow.codegenj.CollectorAPI" value="org.bluez.GattCharacteristic1" />
 		</property>
-		-->
 		<annotation name="de.serviceflow.codegenj.CollectorAPI" value="org.bluez.Device1#*getServices" />
 	</interface>
 	<!-- -->
@@ -277,11 +275,9 @@
 			"encrypt-authenticated-write" "secure-read" (Server only) "secure-write" 
 			(Server only) -->
 		<property name="Flags" type="as" access="read" />
-		<!-- 
 		<property name="Descriptors" type="ao" access="read">
 			<annotation name="de.serviceflow.codegenj.CollectorAPI" value="org.bluez.GattDescriptor1" />
 		</property>
-		-->
 	</interface>
 	<!-- -->
 	<interface name="org.bluez.GattDescriptor1">

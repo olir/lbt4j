@@ -5,7 +5,7 @@
 	<!-- Maven Coordinates -->
 	<groupId>de.serviceflow</groupId>
 	<artifactId>lbt4j</artifactId>
-	<version>0.2.1-SNAPSHOT</version>
+	<version>0.2.2</version>
 	<packaging>jar</packaging>
 
 	<prerequisites>
@@ -93,7 +93,7 @@ Everyone is permitted to copy and distribute verbatim copies of this license doc
 		<dependency>
 			<groupId>de.serviceflow</groupId>
 			<artifactId>codegenj</artifactId>
-			<version>1.3.2</version>
+			<version>1.3.3</version>
 		</dependency>	
 		<dependency>
 			<groupId>junit</groupId>

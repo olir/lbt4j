@@ -228,25 +228,42 @@ Everyone is permitted to copy and distribute verbatim copies of this license doc
 					</configuration>
 				  </execution>
 				</executions>
-			</plugin>		
+			</plugin>
+			
+			<!-- Java Documentation -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.0.2</version>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.4</version>
 				<executions>
 					<execution>
-						<id>empty-javadoc-jar</id>
-						<phase>package</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<configuration>
-							<classifier>javadoc</classifier>
-							<classesDirectory>${basedir}/javadoc</classesDirectory>
-						</configuration>
+					  <id>attach-javadocs</id>
+					  <goals>
+						<goal>jar</goal>
+					  </goals>
 					</execution>
 				</executions>
-			</plugin>			
+				<configuration>
+					<doctitle>My API for ${project.name} ${project.version}</doctitle>
+					<windowtitle>My API for ${project.name} ${project.version}</windowtitle>
+					<testDoctitle>My Test API for ${project.name} ${project.version}</testDoctitle>
+					<testWindowtitle>My Test API for ${project.name} ${project.version}</testWindowtitle>
+					<show>private</show>
+					<failOnError>false</failOnError>
+					<sourcepath>${basedir}/target/generated</sourcepath>
+				</configuration>
+				<!--
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>javadoc-no-fork</report>
+							<report>test-javadoc-no-fork</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+				-->
+			</plugin>
+			
 			<!-- test -->
 			<!-- pre-test -->
 			<plugin>
@@ -417,6 +434,8 @@ Everyone is permitted to copy and distribute verbatim copies of this license doc
 				</configuration>
 			</plugin>
 		</plugins>
+		
+		
 		<pluginManagement>
 			<plugins>
 				<!--This plugin's configuration is used to store Eclipse m2e settings 
@@ -544,30 +563,6 @@ Everyone is permitted to copy and distribute verbatim copies of this license doc
 				</reportSets>
 			</plugin>
 
-			<!-- Java Documentation -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.1</version>
-				<configuration>
-					<doctitle>My API for ${project.name} ${project.version}</doctitle>
-					<windowtitle>My API for ${project.name} ${project.version}</windowtitle>
-
-					<testDoctitle>My Test API for ${project.name} ${project.version}</testDoctitle>
-					<testWindowtitle>My Test API for ${project.name} ${project.version}</testWindowtitle>
-					<show>private</show>
-					<failOnError>true</failOnError>
-				</configuration>
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>javadoc-no-fork</report>
-							<report>test-javadoc-no-fork</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-
 			<!-- Source Code Cross-Reference -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -579,6 +574,29 @@ Everyone is permitted to copy and distribute verbatim copies of this license doc
 				</configuration>
 			</plugin>
 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.4</version>
+				<configuration>
+					<doctitle>My API for ${project.name} ${project.version}</doctitle>
+					<windowtitle>My API for ${project.name} ${project.version}</windowtitle>
+					<testDoctitle>My Test API for ${project.name} ${project.version}</testDoctitle>
+					<testWindowtitle>My Test API for ${project.name} ${project.version}</testWindowtitle>
+					<show>private</show>
+					<failOnError>false</failOnError>
+					<sourcepath>${basedir}/target/generated</sourcepath>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>javadoc-no-fork</report>
+							<report>test-javadoc-no-fork</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			
 			<!--  -->
 			<plugin>
 				<groupId>org.jacoco</groupId>

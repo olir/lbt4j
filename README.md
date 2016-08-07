@@ -32,8 +32,54 @@ You can compile the jni library from the target (jni/ and classes/):
 > cd target/jni
 
 > make clean all
- 
+
+## Download
+
+Get the **jar** here: [MavenCentral](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22lbt4j%22)  
+*TODO: javadoc and native downloads.*
+
 ## HOWTO
 
 This projects build the jar. It is to be used with the The native library build in
  [lbt4j-lib] (https://github.com/olir/lbt4j-lib).
+
+Call your testclient like this:
+
+> java -cp testclasses:lbt4j-0.3.1.jar -Djava.library.path=jni TestClient
+
+where jni is the folder the native library renamed to **libbluezdbus.so** must be placed.
+
+## Example
+
+
+	import de.serviceflow.codegenj.ObjectManager;
+	import org.bluez.Adapter1;
+	import org.bluez.Device1;
+	import org.bluez.GattCharacteristic1;
+	import org.bluez.GattService1;
+	import java.util.logging.Level;
+	
+	...
+	
+	public static void main(String[] args) throws InterruptedException {
+		ObjectManager m = ObjectManager.getInstance();
+		ObjectManager.getLogger().setLevel(Level.FINE); 		
+
+		m.dump();
+
+		System.out.println("*** Object Tree:");
+		for (Adapter1 a : adapters) {
+			System.out.println(" ... adapter "+a.getObjectPath()+"  "+a.getName());
+			for (Device1 d : a.getDevices()) {
+				System.out.println("  .. device "+d.getObjectPath()+"  "+d.getName());
+				for (GattService1 s :  d.getServices()) {
+					System.out.println("   . service "+s.getObjectPath()+"  "+s.getUUID());
+					for (GattCharacteristic1 c :  s.getCharacteristics()) {
+						System.out.println("    . char "+c.getObjectPath()+"  "+c.getUUID());
+					}
+				}
+			}
+		}
+	}
+
+

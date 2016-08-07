@@ -43,7 +43,7 @@ You can compile the jni library from the target (jni/ and classes/):
 ## Download
 
 Get the API **jar** and **javadoc** here: [MavenCentral](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22lbt4j%22)  
-Download the native library at [MavenCentral](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22lbt4j-lib%22)  
+Download the native library **bin** (zip or tar) at [MavenCentral](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22lbt4j-lib%22)  
 
 ## HOWTO
 
@@ -55,7 +55,7 @@ Invoke your client implementation like this:
 
 > java -cp testclasses:lbt4j-0.3.1.jar -Djava.library.path=jni TestClient
 
-where jni is the folder the native library renamed to **libbluezdbus.so** must be placed.
+where jni is the folder the native library **libbluezdbus.so** should be placed.
 
 ## Example
 

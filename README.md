@@ -36,7 +36,7 @@ You can compile the jni library from the target (jni/ and classes/):
 ## Download
 
 Get the API **jar** and **javadoc** here: [MavenCentral](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22lbt4j%22)  
-*TODO:  native downloads.*
+Download the native library at [MavenCentral](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22lbt4j-lib%22)  
 
 ## HOWTO
 

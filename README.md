@@ -27,6 +27,8 @@ Links:
 
 ## Build
 
+Tested with BlueZ 5.40 and 5.41 patched by https://gist.github.com/pelwell/c8230c48ea24698527cd/archive/3b07a1eb296862da889609a84f8e10b299b7442d.zip
+
 ### Maven
 
 You can build the jar file and documentation with maven:

@@ -100,11 +100,16 @@ where jni is the folder the native library **libbluezdbus.so** should be placed.
 				a.startDiscovery();
 			} catch (IOException e) {
 				System.out.println(" ... ignored.");
+				continue;
 			}
 			defaultAdapter = a;
 		}
+		if (defaultAdapter==null) {
+			System.out.println("no useable adapter found. Exit.");
+			System.exit(1);
+		}
 		
-		// Wait for devices to ne discovered
+		// Wait for devices to be discovered
 		Thread.sleep(5000);
 		
 		for (Adapter1 a : adapters) {
@@ -130,7 +135,6 @@ where jni is the folder the native library **libbluezdbus.so** should be placed.
 		}
 		
 		// Use the API to traverse through the tree.
-		// Use 
 		System.out.println("*** Object Tree:");
 		for (Adapter1 a : adapters) {
 			System.out.println(" ... adapter "+a.getObjectPath()+"  "+a.getName());

@@ -112,7 +112,7 @@ where jni is the folder the native library **libbluezdbus.so** should be placed.
 		// Wait for devices to be discovered
 		Thread.sleep(5000);
 		
-		for (Adapter1 a : adapters) {
+		Adapter1 a = defaultAdapter;
 			for (Device1 d : a.getDevices()) {
 				if ("CC2650 SensorTag".equals(d.getName())) {
 					System.out.println(" ==> Device: " + d.getName());
@@ -132,7 +132,6 @@ where jni is the folder the native library **libbluezdbus.so** should be placed.
 					System.out.println(" --> Device " + d.getName()+" skipped.");
 				}
 			}
-		}
 		
 		// Use the API to traverse through the tree.
 		System.out.println("*** Object Tree:");
